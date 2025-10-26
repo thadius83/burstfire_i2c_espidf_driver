@@ -1,0 +1,45 @@
+# Build artifacts
+build/
+dist/
+*.o
+*.a
+*.so
+*.lib
+*.dll
+
+# IDE/Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.cproject
+.settings/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# ESP-IDF specific
+sdkconfig
+sdkconfig.old
+dependencies.lock
+
+# PlatformIO
+.pio/
+.pioenvs/
+.piolibdeps/
+
+# Documentation build
+docs/_build/
