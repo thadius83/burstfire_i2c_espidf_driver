@@ -4,6 +4,8 @@ ESP-IDF v5.2+ driver for ATtiny202 BurstFire SSR controllers. Simple, practical 
 
 ## Quick Start
 
+### ESP-IDF Example
+
 ```c
 #include "burstfire_i2c_driver.h"
 
@@ -33,6 +35,49 @@ void app_main() {
         
         printf("Device 0x%02X configured\n", addr);
     }
+}
+```
+
+### Arduino Example
+
+```cpp
+#include "burstfire_i2c_driver.h"
+
+void setup() {
+    Serial.begin(115200);
+    
+    // Initialize I2C (Arduino auto-detects framework)
+    burstfire_config_t config = {
+        .port = 0,          // Not used in Arduino
+        .sda_pin = 21,      // SDA pin
+        .scl_pin = 22,      // SCL pin  
+        .clk_speed = 100000 // 100kHz
+    };
+    
+    if (burstfire_init(&config) == ESP_OK) {
+        Serial.println("BurstFire driver initialized");
+        
+        // Scan for devices
+        uint8_t addresses[4];
+        uint8_t count;
+        burstfire_scan_devices(addresses, &count);
+        
+        if (count > 0) {
+            uint8_t addr = addresses[0];
+            Serial.printf("Found device at 0x%02X\n", addr);
+            
+            // Set 70% duty cycle
+            burstfire_set_duty(addr, 7);
+            burstfire_set_grid_60hz(addr, true);
+            
+            Serial.println("Device configured");
+        }
+    }
+}
+
+void loop() {
+    // Your main code here
+    delay(1000);
 }
 ```
 
@@ -137,7 +182,7 @@ if (ret == ESP_ERR_INVALID_STATE) {
 Create `components/burstfire_driver/CMakeLists.txt`:
 ```cmake
 idf_component_register(
-    SRCS "burstfire_i2c_driver.c"
+    SRCS "burstfire_i2c_driver.cpp"
     INCLUDE_DIRS "."
     REQUIRES "driver" "esp_log"
 )
@@ -145,6 +190,12 @@ idf_component_register(
 
 Copy driver files to `components/burstfire_driver/` and include:
 ```c
+#include "burstfire_i2c_driver.h"
+```
+
+### Arduino IDE
+Copy both files (`burstfire_i2c_driver.h` and `burstfire_i2c_driver.cpp`) to your Arduino project folder and include:
+```cpp
 #include "burstfire_i2c_driver.h"
 ```
 

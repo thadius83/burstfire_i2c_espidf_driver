@@ -21,9 +21,28 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "esp_err.h"
-#include "driver/i2c.h"
-#include "driver/gpio.h"
+
+// Framework detection and includes
+#ifdef ARDUINO
+  #include <Arduino.h>
+  #include <Wire.h>
+  // Arduino ESP32 already includes ESP-IDF headers - use them directly!
+  #include "esp_err.h"
+  #include "hal/gpio_types.h"
+  #include "hal/i2c_types.h"
+  // I2C port constants for Arduino
+  #ifndef I2C_NUM_0
+  #define I2C_NUM_0 ((i2c_port_t)0)
+  #endif
+  #ifndef I2C_NUM_1  
+  #define I2C_NUM_1 ((i2c_port_t)1)
+  #endif
+#else
+  // ESP-IDF native includes
+  #include "esp_err.h"
+  #include "driver/i2c.h"
+  #include "driver/gpio.h"
+#endif
 
 #ifdef __cplusplus
 extern "C" {
